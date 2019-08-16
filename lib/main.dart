@@ -78,7 +78,7 @@ class RandomWordsState extends State<RandomWords> {
 //    return new Text(wordPair.asPascalCase);
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Flutter Name Generator'),
+        title: new Text('Flutter Name Generator Demo'),
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.list), onPressed: _pressSaved)
         ],
@@ -107,7 +107,7 @@ class RandomWordsState extends State<RandomWords> {
 
       return new Scaffold(
         appBar: new AppBar(
-          title: new Text('Saved Suggestions'),
+          title: new Text('Saved WordPairs'),
         ),
         body: new ListView(
           children: divided,
