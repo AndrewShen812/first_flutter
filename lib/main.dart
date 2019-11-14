@@ -1,17 +1,51 @@
+import 'dart:async';
+
+import 'package:first_flutter/route_test.dart';
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
-void main() => runApp(new MyApp());
+void main() /*=> runApp(new MyApp());*/ {
+  runZoned(() => runApp(MyApp()),
+      zoneSpecification: new ZoneSpecification(
+        handleUncaughtError: (Zone self,
+          ZoneDelegate parent, Zone zone, Object error, StackTrace stackTrace) {
+            print("Ooooops, get error!");
+            print(stackTrace);
+          },
+        print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
+          parent.print(zone, "get log: $line");
+      }),
+      onError: (Object obj, StackTrace stack) {
+        print(obj);
+        print(stack);
+  });
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Welcome to Flutter',
 //      theme: new ThemeData(
 //        primaryColor: Colors.white,
 //      ),
-      home: new RandomWords(),
+      title: 'Welcome to Flutter',
+      initialRoute: "/", // 名为"/"的路由作为应用的home(首页)
+//      home: new RandomWords(),
+      // 注册页面路由
+      routes: {
+        //注册首页路由
+        "/" : (context) => new RandomWords(),
+//        "test_route" : (context) => TestRoute()
+      },
+      onGenerateRoute: (settings) {
+        /// 页面跳转前判断
+        WidgetBuilder builder;
+        if (settings.name == "test_route") {
+          print("gen test page");
+          builder = (context) => new TestRoute();
+        }
+        return MaterialPageRoute(builder: builder, settings: settings);
+      },
     );
   }
 }
@@ -88,31 +122,36 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   void _pressSaved() {
-    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-      final tiles = _saved.map(
-        (pair) {
-          return new ListTile(
-            title: new Text(
-              pair.asPascalCase,
-              style: _biggerFont,
-            ),
-          );
-        },
-      );
+    Navigator.pushNamed(context, "test_route", arguments: DateTime.now().millisecondsSinceEpoch);
+/*    Navigator.of(context).push(new MaterialPageRoute(
+      builder: (context) {
+        final tiles = _saved.map(
+          (WordPair pair) {
+            return new ListTile(
+              title: new Text(
+                pair.asPascalCase,
+                style: _biggerFont,
+              ),
+            );
+          },
+        );
 
-      final divided = ListTile.divideTiles(
-        context: context,
-        tiles: tiles,
-      ).toList();
+        final divided = ListTile.divideTiles(
+          context: context,
+          tiles: tiles,
+        ).toList();
 
-      return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Saved WordPairs'),
-        ),
-        body: new ListView(
-          children: divided,
-        ),
-      );
-    }));
+        return new Scaffold(
+          appBar: new AppBar(
+            title: new Text('Saved WordPairs'),
+          ),
+          body: new ListView(
+            children: divided,
+          ),
+        );
+      }
+    )).whenComplete(() {
+      print("navi back");
+    });*/
   }
 }
