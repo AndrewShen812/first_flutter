@@ -4,6 +4,8 @@ import 'package:first_flutter/route_test.dart';
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
+import 'navi_page.dart';
+
 void main() /*=> runApp(new MyApp());*/ {
   runZoned(() => runApp(MyApp()),
       zoneSpecification: new ZoneSpecification(
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
         //注册首页路由
         "/" : (context) => new RandomWords(),
 //        "test_route" : (context) => TestRoute()
+        "navi_route" : (context) => NaviPage()
       },
       onGenerateRoute: (settings) {
         /// 页面跳转前判断
@@ -67,6 +70,7 @@ class RandomWordsState extends State<RandomWords> {
   // 注意，在小屏幕上，分割线看起来可能比较吃力。
   Widget _buildSuggestions() {
     return new ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.all(16.0),
       itemBuilder: (context, i) {
         if (i.isOdd) return new Divider();
@@ -106,6 +110,34 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
 
+  ScrollController _scrollController = new ScrollController();
+  bool showBackTop = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      double offset = _scrollController.offset;
+      print(offset);
+      if (offset < 1000.0 && showBackTop) {
+        setState(() {
+          showBackTop = false;
+        });
+      }
+      if (offset > 1000.0 && !showBackTop) {
+        setState(() {
+          showBackTop = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 //    final wordPair = new WordPair.random();
@@ -118,11 +150,21 @@ class RandomWordsState extends State<RandomWords> {
         ],
       ),
       body: _buildSuggestions(),
+      floatingActionButton: !showBackTop? null : FloatingActionButton(
+        child: Icon(Icons.arrow_upward),
+        onPressed: () {
+          _scrollController.animateTo(
+              0.0,
+              duration: Duration(milliseconds: 200),
+              curve: Curves.ease);
+        }
+      ),
     );
   }
 
   void _pressSaved() {
-    Navigator.pushNamed(context, "test_route", arguments: DateTime.now().millisecondsSinceEpoch);
+//    Navigator.pushNamed(context, "test_route", arguments: DateTime.now().millisecondsSinceEpoch);
+    Navigator.pushNamed(context, "navi_route");
 /*    Navigator.of(context).push(new MaterialPageRoute(
       builder: (context) {
         final tiles = _saved.map(
