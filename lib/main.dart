@@ -118,7 +118,6 @@ class RandomWordsState extends State<RandomWords> {
     super.initState();
     _scrollController.addListener(() {
       double offset = _scrollController.offset;
-      print(offset);
       if (offset < 1000.0 && showBackTop) {
         setState(() {
           showBackTop = false;

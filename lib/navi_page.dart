@@ -1,4 +1,7 @@
+import 'package:first_flutter/will_pop_scope_test.dart';
 import 'package:flutter/material.dart';
+
+import 'hero_anim_test.dart';
 
 class NaviPage extends StatefulWidget {
   @override
@@ -70,7 +73,8 @@ class _NaviPageState extends State<NaviPage> with SingleTickerProviderStateMixin
               ],
             );
           } else if ("每日一问" == e) {
-            return CustomScrollViewTestRoute();
+            // return CustomScrollViewTestRoute();
+            return WillPopScopeRoute();
           } else {
             return Container(
               alignment: Alignment.center,
@@ -95,7 +99,11 @@ class _NaviPageState extends State<NaviPage> with SingleTickerProviderStateMixin
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-
+            Navigator.push(context, new MaterialPageRoute(
+              builder: (context) {
+                return HeroAnimationRoute();
+              }
+            ));
           }),
     );
   }
@@ -111,15 +119,15 @@ class CustomScrollViewTestRoute extends StatelessWidget {
       child: CustomScrollView(
         slivers: <Widget>[
           //AppBar，包含一个导航栏
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 250.0,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Demo'),
-              background: Image.asset(
-                "./images/avatar.png", fit: BoxFit.cover,),
-            ),
-          ),
+          // SliverAppBar(
+          //   pinned: true,
+          //   expandedHeight: 250.0,
+          //   flexibleSpace: FlexibleSpaceBar(
+          //     title: const Text('Demo'),
+          //     background: Image.asset(
+          //       "./images/avatar.png", fit: BoxFit.cover,),
+          //   ),
+          // ),
 
           SliverPadding(
             padding: const EdgeInsets.all(8.0),
